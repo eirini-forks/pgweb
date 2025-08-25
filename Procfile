@@ -1,1 +1,1 @@
-web: pgweb --url=$DATABASE_URL --listen=$PORT --bind=0.0.0.0 --auth-user=$AUTH_USER --auth-pass=$AUTH_PASS
+web: pgweb --listen=8080 --bind=0.0.0.0 --ssl=disable

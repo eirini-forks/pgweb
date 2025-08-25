@@ -1,6 +1,7 @@
 package command
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/PaesslerAG/jsonpath"
 	"github.com/jackc/pgpassfile"
 	"github.com/jessevdk/go-flags"
 	"github.com/mitchellh/go-homedir"
@@ -72,7 +74,7 @@ var Opts Options
 
 // ParseOptions returns a new options struct from the input arguments
 func ParseOptions(args []string) (Options, error) {
-	var opts = Options{}
+	opts := Options{}
 
 	_, err := flags.ParseArgs(&opts, args)
 	if err != nil {
@@ -85,7 +87,11 @@ func ParseOptions(args []string) (Options, error) {
 	}
 
 	if opts.URL == "" {
-		opts.URL = getPrefixedEnvVar("DATABASE_URL")
+		opts.URL, err = getDBURL()
+		if err != nil {
+			return opts, err
+		}
+
 	}
 
 	if opts.Prefix == "" {
@@ -196,6 +202,38 @@ func ParseOptions(args []string) (Options, error) {
 	}
 
 	return opts, nil
+}
+
+func getDBURL() (string, error) {
+	servicesEnv, ok := os.LookupEnv("VCAP_SERVICES")
+	if !ok {
+		return "", errors.New("VCAP_SERVICES env var not set")
+	}
+
+	services := any(nil)
+	err := json.Unmarshal([]byte(servicesEnv), &services)
+	if err != nil {
+		return "", fmt.Errorf("failed to unmarshal VCAP_SERVICES content: %w", err)
+	}
+
+	endpoint, err := jsonpath.Get("$.psql[0].credentials.endpoint", services)
+	if err != nil {
+		return "", fmt.Errorf("failed to get psql endpoint: %w", err)
+	}
+	user, err := jsonpath.Get("$.psql[0].credentials.user", services)
+	if err != nil {
+		return "", fmt.Errorf("failed to get psql user: %w", err)
+	}
+	password, err := jsonpath.Get("$.psql[0].credentials.password", services)
+	if err != nil {
+		return "", fmt.Errorf("failed to get psql password: %w", err)
+	}
+	port, err := jsonpath.Get("$.psql[0].credentials.port", services)
+	if err != nil {
+		return "", fmt.Errorf("failed to get psql port: %w", err)
+	}
+
+	return fmt.Sprintf("postgres://%s:%s@%s:%s", user, password, endpoint, port), nil
 }
 
 // SetDefaultOptions parses and assigns the options

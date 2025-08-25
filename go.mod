@@ -4,6 +4,7 @@ go 1.22
 
 require (
 	github.com/BurntSushi/toml v1.1.0
+	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/ScaleFT/sshkeys v0.0.0-20200327173127-6142f742bca5
 	github.com/gin-gonic/gin v1.9.1
 	github.com/jackc/pgpassfile v1.0.0
@@ -20,6 +21,7 @@ require (
 )
 
 require (
+	github.com/PaesslerAG/gval v1.0.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
