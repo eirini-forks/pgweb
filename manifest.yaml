@@ -1,0 +1,9 @@
+---
+applications:
+- name: pgweb
+  path: .
+  buildpacks:
+  - paketo-buildpacks/procfile
+  services:
+  - mypsql
+
