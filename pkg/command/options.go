@@ -216,24 +216,12 @@ func getDBURL() (string, error) {
 		return "", fmt.Errorf("failed to unmarshal VCAP_SERVICES content: %w", err)
 	}
 
-	endpoint, err := jsonpath.Get("$.psql[0].credentials.endpoint", services)
+	dbURL, err := jsonpath.Get("$.psql[0].credentials.dbURL", services)
 	if err != nil {
-		return "", fmt.Errorf("failed to get psql endpoint: %w", err)
-	}
-	user, err := jsonpath.Get("$.psql[0].credentials.user", services)
-	if err != nil {
-		return "", fmt.Errorf("failed to get psql user: %w", err)
-	}
-	password, err := jsonpath.Get("$.psql[0].credentials.password", services)
-	if err != nil {
-		return "", fmt.Errorf("failed to get psql password: %w", err)
-	}
-	port, err := jsonpath.Get("$.psql[0].credentials.port", services)
-	if err != nil {
-		return "", fmt.Errorf("failed to get psql port: %w", err)
+		return "", fmt.Errorf("failed to get dbURL: %w", err)
 	}
 
-	return fmt.Sprintf("postgres://%s:%s@%s:%s", user, password, endpoint, port), nil
+	return dbURL.(string), nil
 }
 
 // SetDefaultOptions parses and assigns the options
