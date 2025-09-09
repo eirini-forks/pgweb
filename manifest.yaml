@@ -4,6 +4,3 @@ applications:
   path: .
   buildpacks:
   - paketo-buildpacks/procfile
-  services:
-  - mypsql
-

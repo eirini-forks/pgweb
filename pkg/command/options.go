@@ -89,7 +89,7 @@ func ParseOptions(args []string) (Options, error) {
 	if opts.URL == "" {
 		opts.URL, err = getDBURL()
 		if err != nil {
-			return opts, err
+			fmt.Printf("faield to get DB URL: %v", err)
 		}
 
 	}
