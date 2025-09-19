@@ -4,3 +4,5 @@ applications:
   path: .
   buildpacks:
   - paketo-buildpacks/procfile
+  disk_quota: 256M
+  memory: 128M
