@@ -1,3 +1,8 @@
+> This a fork of [pgweb](https://github.com/sosedoff/pgweb) meant to be used in the context of [this repo](https://github.com/eirini-forks/cfday-europe-2025)
+> Notable changes
+> - Add manifest so that app can be cf push-ed
+> - Introduce support for the VCAP_SERVICES env var
+
 # pgweb
 
 Simple web-based and cross platform PostgreSQL database explorer.
